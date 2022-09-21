@@ -9,7 +9,7 @@ import Slider from "../components/Slider";
 
 const Home = () => {
   return (
-    <div>
+    <div style={{ backgroundImage: "linear-gradient(transparent,lightblue)" }}>
       <Navbar />
       <Announcement />
       <Slider />

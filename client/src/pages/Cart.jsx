@@ -1,5 +1,4 @@
-import { Add, Remove } from "@material-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
@@ -10,6 +9,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { userRequest } from "../requestMethods";
 import { useNavigate } from "react-router-dom";
+import { deleteProduct } from "../redux/cartRedux";
 
 const KEY = process.env.REACT_APP_STRIPE;
 
@@ -42,16 +42,6 @@ const TopButton = styled.button`
   color: ${(props) => props.type === "filled" && "white"};
 `;
 
-const TopTexts = styled.div`
-  ${mobile({ display: "none" })}
-`;
-
-const TopText = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  margin: 0 10px;
-`;
-
 const Bottom = styled.div`
   display: flex;
   justify-content: space-between;
@@ -65,6 +55,8 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
+  border-bottom: 2px solid lightgray;
+  box-shadow: inset 0 0 50px gray;
   ${mobile({ flexDirection: "column" })}
 `;
 
@@ -124,6 +116,20 @@ const ProductPrice = styled.div`
   font-weight: 200;
 `;
 
+const RemoveItem = styled.div`
+  font-size: 12px;
+  color: gray;
+  cursor: pointer;
+  margin-top: 15px;
+  padding: 3px 5px;
+  background-color: lightgray;
+  border-radius: 3px;
+  &:active {
+    background-color: lightcoral;
+    color: orange;
+  }
+`;
+
 const Hr = styled.hr`
   background-color: #eee;
   border: none;
@@ -166,17 +172,20 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [stripeToken, setStripeToken] = useState(null);
   const navigation = useNavigate();
+  const dispatch = useDispatch();
 
   const onToken = (token) => {
     setStripeToken(token);
   };
+
+  const shippingFee = 250;
 
   useEffect(() => {
     const makeRequest = async () => {
       try {
         const res = await userRequest.post("/checkout/payment", {
           tokenId: stripeToken.id,
-          amount: cart.total,
+          amount: cart.total + shippingFee,
         });
         navigation("/success", { data: res.data });
       } catch (err) {
@@ -186,23 +195,24 @@ const Cart = () => {
     stripeToken && makeRequest();
   }, [stripeToken, cart.total, navigation]);
 
+  const removeItem = (product, index) => {
+    dispatch(deleteProduct({ ...product, number: index }));
+  };
+
   return (
     <Container>
       <Navbar />
       <Announcement />
       <Wrapper>
-        <Title>YOUR BAG</Title>
+        <Title>YOUR CART</Title>
         <Top>
-          <TopButton>CONTINUE SHOPPING</TopButton>
-          <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
-            <TopText>Your Wishlist(0)</TopText>
-          </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          <TopButton onClick={() => navigation("/")}>
+            ショッピングを続ける
+          </TopButton>
         </Top>
         <Bottom>
           <Info>
-            {cart.products.map((product) => (
+            {cart.products.map((product, index) => (
               <Product>
                 <ProductDetail>
                   <Image src={product.img} />
@@ -221,47 +231,45 @@ const Cart = () => {
                 </ProductDetail>
                 <PriceDetail>
                   <ProductAmountContainer>
-                    <Add />
+                    個数:
                     <ProductAmount>{product.quantity}</ProductAmount>
-                    <Remove />
                   </ProductAmountContainer>
                   <ProductPrice>
-                    $ {product.price * product.quantity}
+                    ¥ {product.price * product.quantity}
                   </ProductPrice>
+                  <RemoveItem onClick={() => removeItem(product, index)}>
+                    カートから出す
+                  </RemoveItem>
                 </PriceDetail>
               </Product>
             ))}
             <Hr />
           </Info>
           <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+            <SummaryTitle>注文内容</SummaryTitle>
             <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+              <SummaryItemText>商品合計金額</SummaryItemText>
+              <SummaryItemPrice>¥ {cart.total}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+              <SummaryItemText>送料</SummaryItemText>
+              <SummaryItemPrice>¥ {shippingFee}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ {cart.total}</SummaryItemPrice>
+              <SummaryItemText>合計金額</SummaryItemText>
+              <SummaryItemPrice>¥ {cart.total + shippingFee}</SummaryItemPrice>
             </SummaryItem>
             <StripeCheckout
               name="togeoki"
               image="https://images.unsplash.com/photo-1437622368342-7a3d73a34c8f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80"
               billingAddress
               shippingAddress
-              description={`合計金額: ${cart.total}円`}
-              amount={cart.total}
+              description={`合計金額: ${cart.total + shippingFee}円`}
+              amount={cart.total + shippingFee}
               token={onToken}
               stripeKey={KEY}
             >
-              <Button>CHECKOUT NOW</Button>
+              <Button>今すぐ支払う</Button>
             </StripeCheckout>
           </Summary>
         </Bottom>

@@ -4,7 +4,7 @@ import React from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Container = styled.div`
   height: 60px;
@@ -73,6 +73,8 @@ const MenuItem = styled.div`
 
 const Navbar = () => {
   const quantity = useSelector((state) => state.cart.quantity);
+  const { currentUser } = useSelector((state) => state.user);
+  const navigation = useNavigate();
   return (
     <Container>
       <Wrapper>
@@ -89,9 +91,9 @@ const Navbar = () => {
           </a>
         </Center>
         <Right>
-          <MenuItem>REGISTER</MenuItem>
-          <MenuItem>SIGN IN</MenuItem>
-          <Link to="/cart">
+          <MenuItem onClick={() => navigation("/register")}>REGISTER</MenuItem>
+          <MenuItem onClick={() => navigation("/login")}>SIGN IN</MenuItem>
+          <Link to={currentUser ? "/cart" : "/login"}>
             <MenuItem>
               <Badge badgeContent={quantity} color="primary">
                 <ShoppingCartOutlined />
