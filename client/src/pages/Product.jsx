@@ -9,9 +9,8 @@ import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import { publicRequest } from "../requestMethods";
 import { mobile } from "../responsive";
-import axios from "axios";
 import { addProduct } from "../redux/cartRedux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -119,16 +118,22 @@ const Button = styled.button`
     background-color: #f8f4f4;
   }
 `;
+const WarnText = styled.h3`
+  font-size: 15px;
+  color: red;
+`;
 
 const Product = () => {
-  window.scrollTo(0, 0);
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const [color, setColor] = useState("");
   const [size, setSize] = useState("");
+  const [warn, setWarn] = useState(false);
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
+  const cat = location.state.cat;
 
   useEffect(() => {
     const getProduct = async () => {
@@ -152,7 +157,9 @@ const Product = () => {
 
   const handleClick = () => {
     // カートの更新
-    dispatch(addProduct({ ...product, quantity, color, size }));
+    currentUser
+      ? dispatch(addProduct({ ...product, quantity, color, size }))
+      : setWarn(true);
   };
 
   return (
@@ -176,22 +183,32 @@ const Product = () => {
             culpa qui officia deserunt mollit anim id est laborum.
           </Desc>
           <Price>￥ {product.price}</Price>
-          <FilterContainer>
-            <Filter>
-              <FilterTitle>Color</FilterTitle>
-              {product.color?.map((c) => (
-                <FilterColor color={c} key={c} onClick={() => setColor(c)} />
-              ))}
-            </Filter>
-            <Filter>
-              <FilterTitle>Size</FilterTitle>
-              <FilterSize onChange={(e) => setSize(e.target.value)}>
-                {product.size?.map((s) => (
-                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
+          {cat !== "food" && (
+            <FilterContainer>
+              <Filter>
+                <FilterTitle>Color</FilterTitle>
+                {product.color?.map((c) => (
+                  <FilterColor
+                    style={{
+                      border: c === color && "3px solid orange",
+                    }}
+                    color={c}
+                    key={c}
+                    onClick={() => setColor(c)}
+                  />
                 ))}
-              </FilterSize>
-            </Filter>
-          </FilterContainer>
+              </Filter>
+              <Filter>
+                <FilterTitle>Size</FilterTitle>
+                <FilterSize onChange={(e) => setSize(e.target.value)}>
+                  <FilterSizeOption>未選択</FilterSizeOption>
+                  {product.size?.map((s) => (
+                    <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                  ))}
+                </FilterSize>
+              </Filter>
+            </FilterContainer>
+          )}
           <AddContainer>
             <AmountContainer>
               <Remove onClick={() => handleQuantity("dec")} />
@@ -199,6 +216,7 @@ const Product = () => {
               <Add onClick={() => handleQuantity("inc")} />
             </AmountContainer>
             <Button onClick={handleClick}>カートに入れる</Button>
+            {warn && <WarnText>ログインしてください。</WarnText>}
           </AddContainer>
         </InfoContainer>
       </Wrapper>

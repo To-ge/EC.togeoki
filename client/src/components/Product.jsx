@@ -1,10 +1,6 @@
 import styled from "styled-components";
-import {
-  FavoriteBorderOutlined,
-  SearchOutlined,
-  ShoppingCartOutlined,
-} from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { SearchOutlined } from "@material-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 const Info = styled.div`
   opacity: 0;
@@ -30,24 +26,20 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5fbfd;
+  background-color: rgb(246, 235, 220);
   position: relative;
+  box-shadow: 0 0 10px black, inset 0 0 10px gray;
 
   &:hover ${Info} {
     opacity: 1;
   }
 `;
 
-// const Circle = styled.div`
-//   width: 200px;
-//   height: 200px;
-//   border-radius: 50%;
-//   background-color: white;
-//   position: absolute;
-// `;
 const Image = styled.img`
   height: 75%;
   z-index: 2;
+  z-index: 2;
+  object-fit: cover;
 `;
 const Icon = styled.div`
   width: 40px;
@@ -66,22 +58,20 @@ const Icon = styled.div`
   }
 `;
 
-const Product = ({ item }) => {
+const Product = ({ item, cat }) => {
+  const navigation = useNavigate();
   return (
     <Container>
-      {/* <Circle /> */}
       <Image src={item.img} />
       <Info>
         <Icon>
-          <ShoppingCartOutlined />
-        </Icon>
-        <Icon>
-          <Link to={`/product/${item._id}`}>
+          <div
+            onClick={() =>
+              navigation(`/product/${item._id}`, { state: { cat } })
+            }
+          >
             <SearchOutlined />
-          </Link>
-        </Icon>
-        <Icon>
-          <FavoriteBorderOutlined />
+          </div>
         </Icon>
       </Info>
     </Container>

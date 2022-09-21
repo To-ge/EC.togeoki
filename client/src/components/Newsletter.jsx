@@ -9,11 +9,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  box-shadow: inset 0 0 100px 20px lightcoral;
   ${mobile({ height: "40vh" })}
 `;
 const Text = styled.h1`
   font-size: 70px;
   margin-bottom: 20px;
+  text-shadow: 5px 5px 5px gray;
   ${mobile({ fontSize: "50px" })}
 `;
 const Desc = styled.div`
@@ -41,7 +43,7 @@ const Input = styled.input`
 const Button = styled.button`
   flex: 1;
   border: none;
-  background-color: teal;
+  background-color: brown;
   color: white;
 `;
 
@@ -49,7 +51,7 @@ const Newsletter = () => {
   return (
     <Container>
       <Text>News</Text>
-      <Desc>あなたのお気に入りの商品からおすすめ情報をお知らせします。</Desc>
+      <Desc>新商品の入荷の通知やおすすめ情報をお知らせします。</Desc>
       <InputContainer>
         <Input placeholder="Your email" />
         <Button>

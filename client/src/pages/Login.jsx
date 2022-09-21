@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { login } from "../redux/apiCalls";
 import { mobile } from "../responsive";
@@ -66,12 +67,18 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const { isFetching, error } = useSelector((state) => state.user);
+  const navigation = useNavigate();
+  const { isFetching, error, currentUser } = useSelector((state) => state.user);
 
   const handleClick = (e) => {
     e.preventDefault();
     login(dispatch, { username, password });
   };
+
+  useEffect(() => {
+    currentUser && navigation("/");
+    window.alert("ログイン済みです。");
+  }, [currentUser]);
 
   return (
     <Container>
@@ -92,7 +99,7 @@ const Login = () => {
           </Button>
           {error && <Error>ユーザーネームかパスワードに誤りがあります。</Error>}
           <Link>パスワードをお忘れですか？</Link>
-          <Link>アカウントの新規作成</Link>
+          <Link to="/register">アカウントの新規作成</Link>
         </Form>
       </Wrapper>
     </Container>

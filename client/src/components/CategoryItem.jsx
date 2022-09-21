@@ -7,6 +7,7 @@ const Container = styled.div`
   margin: 3px;
   height: 70vh;
   position: relative;
+  box-shadow: 0 0 10px black;
 `;
 const Image = styled.img`
   width: 100%;
@@ -26,8 +27,9 @@ const Info = styled.div`
   justify-content: center;
 `;
 const Title = styled.h1`
-  color: white;
+  color: gray;
   margin-bottom: 20px;
+  text-shadow: 3px 3px lightgray;
 `;
 const Button = styled.button`
   border: none;
@@ -41,13 +43,13 @@ const Button = styled.button`
 const CategoryItem = ({ item }) => {
   return (
     <Container>
-      <Link to={`/products/${item.cat}`}>
-        <Image src={item.img} />
-        <Info>
-          <Title>{item.title}</Title>
+      <Image src={item.img} />
+      <Info>
+        <Title>{item.title}</Title>
+        <Link to={`/products/${item.cat}`}>
           <Button>SHOP NOW</Button>
-        </Info>
-      </Link>
+        </Link>
+      </Info>
     </Container>
   );
 };
