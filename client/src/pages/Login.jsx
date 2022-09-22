@@ -76,8 +76,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    currentUser && navigation("/");
-    window.alert("ログイン済みです。");
+    if (currentUser) {
+      navigation("/");
+      window.alert("ログイン済みです。");
+    }
   }, [currentUser]);
 
   return (
