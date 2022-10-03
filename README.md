@@ -38,3 +38,12 @@ MongoDB
    `cd client` --> `npm install` --> `npm start`
 3. server 側の起動
    `cd server` --> `npm install` --> `npm start`
+
+---
+
+### 開発中
+
+新たに不具合が発生したため改善が必要
+
+問題
+・ページの再読み込みで Redux の state が元に戻ってしまう。
