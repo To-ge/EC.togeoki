@@ -195,7 +195,7 @@ const Cart = () => {
       }
     };
     stripeToken && makeRequest();
-  }, [stripeToken, cart.total, navigation]);
+  }, [stripeToken, cart.total]);
 
   useEffect(() => {
     checkoutInfo && navigation("/success", { state: { data: checkoutInfo } });

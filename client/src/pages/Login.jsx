@@ -104,7 +104,6 @@ const Login = () => {
             LOGIN
           </Button>
           {error && <Error>ユーザーネームかパスワードに誤りがあります。</Error>}
-          <Link>パスワードをお忘れですか？</Link>
           <Link to="/register">アカウントの新規作成</Link>
         </Form>
       </Wrapper>
