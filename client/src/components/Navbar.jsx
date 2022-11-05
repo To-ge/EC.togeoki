@@ -52,6 +52,7 @@ const Center = styled.div`
 
 const Logo = styled.h1`
   font-weight: bold;
+  cursor: pointer;
   ${mobile({ fontSize: "20px", marginLeft: "20px" })}
 `;
 
@@ -86,9 +87,11 @@ const Navbar = () => {
           </SearchContainer>
         </Left>
         <Center>
-          <a href="/" style={{ textDecoration: "none", color: "inherit" }}>
+          {/* <a href="/" style={{ textDecoration: "none", color: "inherit" }}> */}
+          <div onClick={() => navigation("/")}>
             <Logo>TOGEOKI.</Logo>
-          </a>
+          </div>
+          {/* </a> */}
         </Center>
         <Right>
           <MenuItem onClick={() => navigation("/register")}>REGISTER</MenuItem>

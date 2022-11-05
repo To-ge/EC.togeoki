@@ -18,6 +18,18 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 `;
+const BackButton = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 50px;
+  padding: 10px 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px gray;
+  background-color: lightgray;
+  color: gray;
+  cursor: pointer;
+`;
 const Wrapper = styled.div`
   width: 40%;
   padding: 20px;
@@ -94,6 +106,7 @@ const Register = () => {
 
   return (
     <Container>
+      <BackButton onClick={() => navigation("/")}>ホームに戻る</BackButton>
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
         <Form>

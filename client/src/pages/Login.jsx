@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { login } from "../redux/apiCalls";
+import { deleteCurrentUser } from "../redux/userRedux";
 import { mobile } from "../responsive";
 
 const Container = styled.div`
@@ -18,6 +19,18 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+const BackButton = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 50px;
+  padding: 10px 20px;
+  font-size: 15px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px gray;
+  background-color: lightgray;
+  color: gray;
+  cursor: pointer;
 `;
 const Wrapper = styled.div`
   width: 25%;
@@ -72,6 +85,10 @@ const Login = () => {
   const newUser = location.state?.newUser;
   const { isFetching, error, currentUser } = useSelector((state) => state.user);
 
+  useEffect(() => {
+    dispatch(deleteCurrentUser);
+  }, []);
+
   // ログイン処理
   const handleClick = (e) => {
     e.preventDefault();
@@ -87,6 +104,7 @@ const Login = () => {
 
   return (
     <Container>
+      <BackButton onClick={() => navigation("/")}>ホームに戻る</BackButton>
       <Wrapper>
         <Title>SIGN IN</Title>
         <Form>
