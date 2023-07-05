@@ -19,7 +19,7 @@ mongoose
 
 app.use(cors(
   {
-    origin: 'https://my-portfolio-two-azure.vercel.app/'
+    origin: 'https://ec-togeoki.vercel.app/'
 ));
 app.use(express.json());
 app.use("/api/auth", authRoute);
