@@ -20,6 +20,7 @@ mongoose
 app.use(cors(
   {
     origin: 'https://ec-togeoki.vercel.app/'
+  }
 ));
 app.use(express.json());
 app.use("/api/auth", authRoute);
