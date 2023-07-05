@@ -1,6 +1,6 @@
 import axios from "axios";
 // "http://localhost:5000/api"
-const BASE_URL = "https://my-portfolio-f85x.vercel.app/api";
+const BASE_URL = "https://ec-togeoki-6tzb.vercel.app/api";
 const TOKEN = JSON.parse(JSON.parse(localStorage.getItem("persist:root")).user)
   .currentUser.accesstoken;
 
